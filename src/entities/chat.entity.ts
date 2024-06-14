@@ -15,10 +15,10 @@ export class ChatEntity {
   @Column({nullable: true})
   profileImg: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({nullable: true})
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({nullable: true})
   updatedAt!: Date;
 
   @DeleteDateColumn()
