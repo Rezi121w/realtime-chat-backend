@@ -15,11 +15,11 @@ export class ChatEntity {
   @Column({nullable: true})
   profileImg: string;
 
-  @CreateDateColumn({nullable: true})
-  createdAt!: Date;
+  @CreateDateColumn({ type: 'datetime', precision: 6, default: () => 'CURRENT_TIMESTAMP(6)' })
+   createdAt: Date;
 
-  @UpdateDateColumn({nullable: true})
-  updatedAt!: Date;
+  @UpdateDateColumn({ type: 'datetime', precision: 6, default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)' })
+   updatedAt: Date;
 
   @DeleteDateColumn()
   deletedAt!: Date;
