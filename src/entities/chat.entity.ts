@@ -1,21 +1,41 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity, OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity("chat")
+// Entities //
+import { Exclude } from "class-transformer";
+// Roles //
+import { UserRole } from '../enums/user-role';
+import { MessageEntity } from './message.entity';
+
+@Entity('chats')
 export class ChatEntity {
 
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  message!: string;
+  name!: string;
 
-  @Column()
-  authorName!: string;
+  @Exclude()
+  @Column({ type: 'enum', enum: UserRole })  // Используйте enum для ролей
+  requiredRole!: UserRole;
 
-  @Column({nullable: true})
-  profileImg: string;
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 
   @DeleteDateColumn()
   deletedAt!: Date;
+
+  @OneToMany(() => MessageEntity, (message) => message.chat, {eager: true} )
+  messages!: MessageEntity[];
 
 }

@@ -1,16 +1,16 @@
-// Imports
 import { Module } from '@nestjs/common';
-import { ConfigModule } from "@nestjs/config";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import * as dotenv from 'dotenv';
-// Base //
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ChatModule } from './chat/chat.module';
-// Entities
-import { ChatEntity } from "./entities/chat.entity";
+// ORM
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+// Entities //
+import * as entities from './entities';
+// Modules //
+import { AuthModule } from './auth/auth.module';
+import { ChatsModule } from './chats/chats.module';
+import { MessagesModule } from './messages/messages.module';
 
-dotenv.config()
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -21,11 +21,10 @@ dotenv.config()
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASS,
       database: process.env.MYSQL_DBNAME,
-      entities: [ChatEntity],
+      entities: Object.values(entities),
       synchronize: true,
-    }),
-    ChatModule],
-    controllers: [AppController],
+    }), AuthModule, ChatsModule, MessagesModule],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
