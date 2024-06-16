@@ -23,6 +23,13 @@ import { MessagesModule } from './messages/messages.module';
       database: process.env.MYSQL_DBNAME,
       entities: Object.values(entities),
       synchronize: true,
+      extra: {
+        connectionLimit: 10,
+        connectTimeout: 30000,
+        acquireTimeout: 30000,
+        keepAlive: true,
+        keepAliveInitialDelay: 10000,
+      },
     }), AuthModule, ChatsModule, MessagesModule],
   controllers: [AppController],
   providers: [AppService],
