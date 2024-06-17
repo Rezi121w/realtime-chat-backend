@@ -8,13 +8,16 @@ import { CreateMessage } from './dtos/message.dto';
 import { EditMessageDto } from './dtos/editmessage.dto';
 // Roles //
 import { checkUserRoleHierarchy } from '../guards/checkRole';
+// GT //
+import { ChatGateway } from './chat.gateway';
 
 @Injectable()
 export class MessagesService {
   constructor(
     @InjectRepository(ChatEntity) private chatRepository: Repository<ChatEntity>,
     @InjectRepository(MessageEntity) private messageRepository: Repository<MessageEntity>,
-    @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>) {}
+    @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>,
+    private readonly chatGateway: ChatGateway) {}
 
   async createMessage(data: CreateMessage, payload: any) {
     const chat = await this.chatRepository.findOne({where: {id: data.chatId} });
@@ -38,6 +41,17 @@ export class MessagesService {
     newMessage.chat = chat;
 
     await this.messageRepository.save(newMessage);
+    this.chatGateway.sendMessage(data.chatId.toString(), {
+      id: newMessage.id,
+      content: newMessage.content,
+      sender: {
+        id: user.id,
+        userName: user.userName,
+        profileImg: user.profileImg,
+      },
+      createdAt: newMessage.createdAt,
+    });
+
     return true;
   }
 
