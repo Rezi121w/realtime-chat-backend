@@ -8,15 +8,13 @@ async function bootstrap() {
   // Cors Protections //
 
   const corsOptions: CorsOptions = {
-    origin: 'https://beatflow.online',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
+    origin: '*',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
-    allowedHeaders: 'Content-Type, Accept, Authorization',
   };
 
-  app.enableCors(); //  corsOptions must be add, but for dev mode it enable now.
+  app.enableCors(corsOptions);
 
   //
   app.useGlobalPipes(new ValidationPipe({
