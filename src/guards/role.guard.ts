@@ -24,9 +24,6 @@ export class RolesGuard implements CanActivate {
         if (!payload) {
             throw new HttpException("You Are Not User!", HttpStatus.FORBIDDEN);
         }
-        if(isBlocked) {
-            throw new HttpException("Sorry, But You Are Blocked!", HttpStatus.FORBIDDEN);
-        }
 
         request['user'] = await payload;
         return this.matchRoles(requiredRoles, payload.role);
