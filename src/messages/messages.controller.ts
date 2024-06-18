@@ -29,7 +29,7 @@ export class MessagesController {
   @Delete(":id")
   @Roles(UserRole.user)
   async deleteMessage(@Param("id") id: string, @Request() req: any) {
-    return await this.messagesService.deleteMessage(+id, req.user.id);
+    return await this.messagesService.deleteMessage(+id, req.user);
   }
 
 }

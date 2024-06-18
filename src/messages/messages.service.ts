@@ -8,7 +8,7 @@ import { CreateMessage } from './dtos/message.dto';
 import { EditMessageDto } from './dtos/editmessage.dto';
 // Roles //
 import { checkUserRoleHierarchy } from '../guards/checkRole';
-
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class MessagesService {
@@ -55,13 +55,19 @@ export class MessagesService {
     return await this.messageRepository.save(message);
   }
 
-  async deleteMessage(id: number, userId: number) {
+  async deleteMessage(id: number, user: any) {
     const message = await this.messageRepository.findOne({where: {id: id} });
     if(!message) {
       throw new HttpException("Message Not Found!", HttpStatus.NOT_FOUND);
     }
-    if(message.sender.id != userId) {
+    if(message.sender.id != user.id) {
       throw new HttpException("You Are`Not Message Owner!", HttpStatus.FORBIDDEN);
+    }
+
+    const fifteenMinutesAgo = dayjs().subtract(135, 'minute');
+    const isDateExpired = dayjs(message.createdAt).isBefore(fifteenMinutesAgo);
+    if(isDateExpired && user.role != "admin") {
+      throw new HttpException("You Can Delete A Message, Only For 15 Minutes After His Writing", HttpStatus.FORBIDDEN);
     }
 
     return await this.messageRepository.softDelete(message.id);
