@@ -1,6 +1,6 @@
 export function checkUserRoleHierarchy(userRole: string, chatRole: string) {
   const roleHierarchy = {
-    admin: ['admin', 'devtutor', 'destutor', 'developer', 'designer', 'user'],
+    admin: ['admin', 'devtutor', 'destutor', 'tutor', 'developer', 'designer', 'user'],
     devtutor: ['tutor', 'developer', 'user'],
     destutor: ['tutor', 'designer', 'user'],
     tutor: ['tutor', 'user'],
